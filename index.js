@@ -25,14 +25,24 @@ var io = socket( server );
  * io.sockets() refers to all the sockets connected to the same server via different clients/browser.
  */
 io.on( 'connection', function ( socket ) {
-	console.log( 'Socket Connection made', socket.id );
+
+	// console.log( 'Socket Connection made', socket.id );
+
+	// Send Chat message back to all clients listing to the same server via their sockets.
 	socket.on( 'chat', function ( data ) {
-		console.log( data );
 		/**
 		 * io.sockets refers to all the sockets connected to the same server via different clients/browser.
 		 * we are sending the data received from one client back to all the clients which are connected to the same server via their open socket connection.
 		 */
 		io.sockets.emit( 'chat', data );
+
+	} );
+
+	/**
+	 * Send the broadcasting message that the user is typing.
+	 */
+	socket.on( 'typing', function ( data ) {
+		socket.broadcast.emit( 'typing', data );
 	} );
 
 } );
